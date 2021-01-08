@@ -3,20 +3,30 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using McStatBot.Impl;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace McStatBot.Commands
 {
     public class MinecraftStatModule : BaseCommandModule
     {
-        private string serverName = null;
+        private readonly Dictionary<string, string> serverNames = new Dictionary<string, string>();
         private readonly IMinecraftServerStatsClient minecraftServerStatsClient = new McSrvrStat();
 
         [Command("register")]
         [Description("Registers and shows the status of a minecraft server name to view statuses for")]
         public async Task RegisterCommand(CommandContext ctx, [Description("Name or IP of the server")] string serverName)
         {
-            this.serverName = serverName;
+
+            if (this.serverNames.ContainsKey(ctx.Guild.Name))
+            {
+                this.serverNames[ctx.Guild.Name] = serverName;
+            }
+            else
+            {
+                this.serverNames.Add(ctx.Guild.Name, serverName);
+            }
+
             await ctx.RespondAsync($"Registered {serverName}");
             await ShowCommand(ctx);
         }
@@ -25,7 +35,7 @@ namespace McStatBot.Commands
         [Description("Shows the status of the currently regisered minecraft server")]
         public async Task ShowCommand(CommandContext ctx)
         {
-            if (serverName == null)
+            if (!this.serverNames.TryGetValue(ctx.Guild.Name, out var serverName))
             {
                 await ctx.RespondAsync("Register a server first");
                 return;
