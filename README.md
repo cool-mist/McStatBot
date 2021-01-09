@@ -1,8 +1,10 @@
-# McStatBot
+# <img src="https://bionicbeanie.me/McStatBot.png" alt="drawing" width="30"/> McStatBot 
 
-Add bot to your discord server using this [invite](https://discord.com/api/oauth2/authorize?client_id=716535144344977469&permissions=84992&scope=bot)
+Discord bot to show server status and player profile. 
 
-![.NET](https://github.com/cool-mist/McStatBot/workflows/.NET/badge.svg?branch=main)
+![.NET](https://github.com/cool-mist/McStatBot/workflows/.NET/badge.svg?branch=main) 
+
+Add bot to your discord server using this [invite](https://discord.com/api/oauth2/authorize?client_id=716535144344977469&permissions=84992&scope=bot) 
 
 ## Commands
 
