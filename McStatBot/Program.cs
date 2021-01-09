@@ -12,14 +12,13 @@ namespace McStatBot
 
         private async Task MainAsync(string[] args)
         {
+            var token = Environment.GetEnvironmentVariable("TOKEN");
 
-            if (args.Length == 0)
+            if (string.IsNullOrWhiteSpace(token))
             {
                 Console.WriteLine("Missing token");
                 Environment.Exit(-1);
             }
-
-            var token = args[0];
 
             var bot = new DiscordClient(new DiscordConfiguration()
             {
@@ -33,7 +32,8 @@ namespace McStatBot
                 StringPrefixes = new[] { "!" }
             });
 
-            commands.RegisterCommands<MinecraftStatModule>();
+            commands.RegisterCommands<MinecraftServerModule>();
+            commands.RegisterCommands<PlayerModule>();
 
             await bot.ConnectAsync();
 

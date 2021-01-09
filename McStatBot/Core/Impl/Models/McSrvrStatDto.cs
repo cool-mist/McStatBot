@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace McStatBot
+namespace McStatBot.Core.Impl.Models
 {
-    public class MinecraftServerStat
+    internal class McSrvrStatDto
     {
         [JsonProperty("version")]
         public string Version { get; set; }
@@ -16,7 +16,7 @@ namespace McStatBot
         [JsonProperty("hostname")]
         public string Hostname { get; set; }
 
-        [JsonProperty(PropertyName = "players")]
+        [JsonProperty("players")]
         public PlayersStat Players { get; set; }
 
         [JsonProperty("ip")]
@@ -28,10 +28,15 @@ namespace McStatBot
         [JsonProperty("motd")]
         public Motd Motd { get; set; }
 
-        public string Icon { get; set; }
+        public string Icon { get; private set; }
+
+        public void SetIcon(string iconUrl)
+        {
+            this.Icon = iconUrl;
+        }
     }
 
-    public class Motd
+    internal class Motd
     {
         [JsonProperty("raw")]
         public string[] Raw { get; set; }
@@ -43,7 +48,7 @@ namespace McStatBot
         public string[] Html { get; set; }
     }
 
-    public class PlayersStat
+    internal class PlayersStat
     {
         [JsonProperty(PropertyName = "max")]
         public int Max { get; set; }
