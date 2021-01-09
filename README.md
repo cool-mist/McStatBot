@@ -1,6 +1,6 @@
 # McStatBot
 
-Minecraft Discord bot 
+Add bot to your discord server using this [invite](https://discord.com/api/oauth2/authorize?client_id=716535144344977469&permissions=84992&scope=bot)
 
 ![.NET](https://github.com/cool-mist/McStatBot/workflows/.NET/badge.svg?branch=main)
 
@@ -16,7 +16,7 @@ Name|Description|Usage
 
 ## Self hosting
 
-- Requires [.NET Core 3+ runtime](https://github.com/dotnet/runtime)
+- Requires [.NET Core 3+](https://github.com/dotnet/runtime)
 - Set token as the environment variable `TOKEN` for the process
 
 ```sh

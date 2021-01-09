@@ -4,6 +4,9 @@ namespace McStatBot.Core.Impl.Models
 {
     internal class Player : IPlayer
     {
+
+        public bool Found { get; set; }
+
         public string Name { get; set; }
 
         public Guid Id { get; set; }

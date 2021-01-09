@@ -5,6 +5,7 @@ using McStatBot.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,15 @@ namespace McStatBot.Impl
                 profileByPlayerNameUri,
                 new StringContent(data, Encoding.UTF8, "application/json")))
             {
+
+                if (httpResponseMessage.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    return new Player()
+                    {
+                        Found = false
+                    };
+                }
+
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
                     var responseString = await httpResponseMessage.Content.ReadAsStringAsync();
@@ -52,12 +62,13 @@ namespace McStatBot.Impl
 
                     return new Player()
                     {
+                        Found = true,
                         Name = playerSlimDetails.Name,
                         Id = Guid.Parse(playerSlimDetails.Id),
                         Legacy = playerSlimDetails.Legacy ?? false,
                         Demo = playerSlimDetails.Demo ?? false,
                         Skin = playerTextureDetails.Texture.TextureData.Skin.Url,
-                        SkinType = playerTextureDetails.Texture.TextureData.Skin.Metadata?.Model ?? "square",
+                        SkinType = playerTextureDetails.Texture.TextureData.Skin.Metadata?.Model ?? "classic",
                         Names = playerNameHistory.Select(n => new PlayerName()
                         {
                             Name = n.Name,

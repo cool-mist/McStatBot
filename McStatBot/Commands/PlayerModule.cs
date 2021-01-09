@@ -27,6 +27,12 @@ namespace McStatBot.Commands
                 return;
             }
 
+            if (player.Found == false)
+            {
+                await ctx.RespondAsync(string.Format(ErrorCodes.PlayerNotFound, playerName));
+                return;
+            }
+
             var playerNamesHistoryBuilder = new StringBuilder();
 
             var sortedPlayerNames = player.Names.ToList()

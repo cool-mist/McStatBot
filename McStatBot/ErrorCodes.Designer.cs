@@ -68,5 +68,14 @@ namespace McStatBot {
                 return ResourceManager.GetString("GenericExceptionMessage", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This player {0} does not exist..
+        /// </summary>
+        internal static string PlayerNotFound {
+            get {
+                return ResourceManager.GetString("PlayerNotFound", resourceCulture);
+            }
+        }
     }
 }

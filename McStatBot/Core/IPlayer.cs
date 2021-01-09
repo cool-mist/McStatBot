@@ -4,6 +4,7 @@ namespace McStatBot.Core
 {
     public interface IPlayer
     {
+        bool Found { get; }
         string Name { get; }
         Guid Id { get; }
         string Skin { get; }
