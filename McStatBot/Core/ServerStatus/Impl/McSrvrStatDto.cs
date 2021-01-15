@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace McStatBot.Core.Impl.Models
+namespace McStatBot.Core.ServerStatus.Impl
 {
     internal class McSrvrStatDto
     {

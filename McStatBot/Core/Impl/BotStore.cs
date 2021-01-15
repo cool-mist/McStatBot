@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using McStatBot.Core.Guild;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 
 namespace McStatBot.Core.Impl
 {
-    class BotStore : IBotStore
+    public class BotStore : IBotStore
     {
         private string StoreRoot;
         private string GuildsPath;
@@ -47,35 +48,35 @@ namespace McStatBot.Core.Impl
             File.Create(GuildsPath, 100, FileOptions.SequentialScan);
         }
 
-        public IEnumerator<GuildDetails> ReadGuilds()
+        public IEnumerator<IGuildDetails> ReadGuilds()
         {
             if (File.Exists(GuildsPath))
             {
                 try
                 {
                     var content = File.ReadAllText(GuildsPath);
-                    var guilds = JsonConvert.DeserializeObject<List<GuildDetails>>(content);
+                    var guilds = JsonConvert.DeserializeObject<List<IGuildDetails>>(content);
 
                     if (guilds == null)
                     {
-                        return Enumerable.Empty<GuildDetails>().GetEnumerator();
+                        return Enumerable.Empty<IGuildDetails>().GetEnumerator();
                     }
 
                     return guilds.GetEnumerator();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    return Enumerable.Empty<GuildDetails>().GetEnumerator();
+                    return Enumerable.Empty<IGuildDetails>().GetEnumerator();
                 }
             }
 
             CreateGuildsJson();
-            return Enumerable.Empty<GuildDetails>().GetEnumerator();
+            return Enumerable.Empty<IGuildDetails>().GetEnumerator();
         }
 
-        public void WriteGuilds(IEnumerator<GuildDetails> guildDetails)
+        public void WriteGuilds(IEnumerator<IGuildDetails> guildDetails)
         {
-            var guilds = new List<GuildDetails>();
+            var guilds = new List<IGuildDetails>();
 
             while (guildDetails.MoveNext())
             {

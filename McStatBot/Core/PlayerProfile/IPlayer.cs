@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace McStatBot.Core
+namespace McStatBot.Core.PlayerProfile
 {
     public interface IPlayer
     {

@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using McStatBot.Core.Guild;
+using System.Collections.Generic;
 
 namespace McStatBot.Core
 {
     public interface IBotStore
     {
-        void WriteGuilds(IEnumerator<GuildDetails> guildDetails);
+        void WriteGuilds(IEnumerator<IGuildDetails> guildDetails);
 
-        IEnumerator<GuildDetails> ReadGuilds();
+        IEnumerator<IGuildDetails> ReadGuilds();
     }
 }

@@ -1,8 +1,8 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using McStatBot.Core;
-using McStatBot.Impl;
+using McStatBot.Core.PlayerProfile;
+using McStatBot.Core.PlayerProfile.Impl;
 using McStatBot.Utils;
 using System;
 using System.Linq;

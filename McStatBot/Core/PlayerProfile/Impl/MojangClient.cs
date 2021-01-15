@@ -1,7 +1,4 @@
-﻿using McStatBot.Core;
-using McStatBot.Core.Impl.Models;
-using McStatBot.Models;
-using McStatBot.Utils;
+﻿using McStatBot.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -10,14 +7,13 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace McStatBot.Impl
+namespace McStatBot.Core.PlayerProfile.Impl
 {
     /// <summary>
     /// https://wiki.vg/Mojang_API
     /// </summary>
     internal class MojangClient : IMojangClient
     {
-
         private readonly string profileByPlayerNameUri = @"https://api.mojang.com/profiles/minecraft";
         private readonly string profileByUuidUri = @"https://sessionserver.mojang.com/session/minecraft/profile/{0}";
         private readonly string nameHistoryByUuidUri = @"https://api.mojang.com/user/profiles/{0}/names";

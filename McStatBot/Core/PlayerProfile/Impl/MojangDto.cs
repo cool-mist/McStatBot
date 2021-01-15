@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace McStatBot.Models
+namespace McStatBot.Core.PlayerProfile.Impl
 {
     internal class PlayerDto
     {

@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace McStatBot.Core.Impl.Models
+namespace McStatBot.Core.PlayerProfile.Impl
 {
     internal class Player : IPlayer
     {
-
         public bool Found { get; set; }
 
         public string Name { get; set; }

@@ -1,8 +1,8 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using McStatBot.Core;
-using McStatBot.Impl;
+using McStatBot.Core.ServerStatus;
+using McStatBot.Core.ServerStatus.Impl;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

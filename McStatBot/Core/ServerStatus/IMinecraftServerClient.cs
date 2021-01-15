@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace McStatBot.Core
+namespace McStatBot.Core.ServerStatus
 {
     public interface IMinecraftServerClient : IDisposable
     {

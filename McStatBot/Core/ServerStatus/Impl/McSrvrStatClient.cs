@@ -1,11 +1,9 @@
-﻿using McStatBot.Core;
-using McStatBot.Core.Impl.Models;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace McStatBot.Impl
+namespace McStatBot.Core.ServerStatus.Impl
 {
     internal class McSrvrStatClient : IMinecraftServerClient, IDisposable
     {

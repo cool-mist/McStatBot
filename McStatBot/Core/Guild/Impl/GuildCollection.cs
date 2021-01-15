@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace McStatBot.Core.Impl
+namespace McStatBot.Core.Guild.Impl
 {
-    public class GuildCollection : IGuildCollection
+    internal class GuildCollection : IGuildCollection
     {
 
-        private Dictionary<string, GuildDetails> guildDetails;
+        private Dictionary<string, IGuildDetails> guildDetails;
 
-        public GuildCollection(IEnumerator<GuildDetails> guildDetails)
+        public GuildCollection(IEnumerator<IGuildDetails> guildDetails)
         {
-            this.guildDetails = new Dictionary<string, GuildDetails>();
+            this.guildDetails = new Dictionary<string, IGuildDetails>();
 
             while (guildDetails.MoveNext())
             {
@@ -19,7 +19,7 @@ namespace McStatBot.Core.Impl
             }
         }
 
-        public IEnumerator<GuildDetails> GetAllGuilds()
+        public IEnumerator<IGuildDetails> GetAllGuilds()
         {
             return guildDetails.Values.GetEnumerator();
         }
@@ -28,8 +28,7 @@ namespace McStatBot.Core.Impl
         {
             if (guildDetails.ContainsKey(guildName))
             {
-                this.guildDetails[guildName].LastActive = DateTime.Now;
-                return;
+                guildDetails.Remove(guildName);
             }
 
             this.guildDetails.Add(guildName, new GuildDetails()

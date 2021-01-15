@@ -2,7 +2,10 @@
 using DSharpPlus.CommandsNext;
 using McStatBot.Commands;
 using McStatBot.Core;
+using McStatBot.Core.Guild;
+using McStatBot.Core.Guild.Impl;
 using McStatBot.Core.Impl;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
@@ -15,6 +18,7 @@ namespace McStatBot
         private IGuildsMonitor guildsMonitor;
         private IGuildCollection guildsCollection;
         private IBotStore botStore;
+        private IServiceProvider services;
 
         private async Task MainAsync(string[] args)
         {
@@ -30,23 +34,25 @@ namespace McStatBot
 
             var bot = CreateBot(token);
 
-            ConfigureBot(bot);
+            ConfigureBot(bot, services);
 
             await bot.ConnectAsync();
             await Task.Delay(-1);
         }
 
-        private void ConfigureBot(DiscordClient bot)
+        private void ConfigureBot(DiscordClient bot, IServiceProvider services)
         {
             bot.MessageCreated += TraceGuild;
 
             var commands = bot.UseCommandsNext(new CommandsNextConfiguration()
             {
-                StringPrefixes = new[] { "!" }
+                StringPrefixes = new[] { "!" },
+                Services = services
             });
 
             commands.RegisterCommands<MinecraftServerModule>();
             commands.RegisterCommands<PlayerModule>();
+            commands.RegisterCommands<CoordinatesModule>();
         }
 
         private DiscordClient CreateBot(string token)
@@ -63,6 +69,11 @@ namespace McStatBot
             botStore = new BotStore();
             guildsMonitor = new GuildsMonitor(botStore);
             guildsCollection = guildsMonitor.Load();
+
+            services = new ServiceCollection()
+                .AddSingleton(botStore)
+                .AddSingleton(guildsCollection)
+                .BuildServiceProvider();
         }
 
         private void ScheduleGuildMonitor()
