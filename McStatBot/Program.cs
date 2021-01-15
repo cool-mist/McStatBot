@@ -62,7 +62,7 @@ namespace McStatBot
         {
             botStore = new BotStore();
             guildsMonitor = new GuildsMonitor(botStore);
-            guildsCollection = guildsMonitor.Load(); throw new NotImplementedException();
+            guildsCollection = guildsMonitor.Load();
         }
 
         private void ScheduleGuildMonitor()
