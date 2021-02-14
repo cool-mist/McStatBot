@@ -10,7 +10,9 @@ namespace McStatBot.Core.PlayerProfile.Impl
 
         public Guid Id { get; set; }
 
-        public string Skin { get; set; }
+        public string SkinUrl { get; set; }
+
+        public string HeadUrl { get; set; }
 
         public string SkinType { get; set; }
 

@@ -28,7 +28,7 @@ namespace McStatBot.Container
             IBotStore botStore = new BotStore();
             IGuildsMonitor guildsMonitor = new GuildsMonitor(botStore);
             IGuildCollection guildsCollection = guildsMonitor.Load();
-            IMojangClient mojangClient = new MojangClient();
+            IMinecraftPlayerClient mojangClient = new MinecraftPlayerClient();
             IMinecraftServerClient minecraftServerClient = new McSrvrStatClient();
             IConfig config = new ConfigStore();
 

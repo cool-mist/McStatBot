@@ -12,9 +12,9 @@ namespace McStatBot.Commands
 {
     public class PlayerModule : BaseCommandModule
     {
-        private IMojangClient mojangClient;
+        private IMinecraftPlayerClient mojangClient;
 
-        public PlayerModule(IMojangClient mojangClient)
+        public PlayerModule(IMinecraftPlayerClient mojangClient)
         {
             this.mojangClient = mojangClient;
         }
@@ -50,11 +50,11 @@ namespace McStatBot.Commands
             }
 
             var discordEmbed = new DiscordEmbedBuilder()
-                .WithAuthor($"Profile for {player.Name}", null)
+                .WithAuthor($"Profile for {player.Name}", null, player.HeadUrl)
                 .WithDescription($"Short UUID: `{player.Id:N}`\nLong UUID : `{player.Id:D}`")
                 .WithColor(DiscordColor.Blue)
-                .WithThumbnail(player.Skin)
-                .AddField("Skin", $"[View Image]({player.Skin})", inline: true)
+                .WithThumbnail(player.SkinUrl)
+                .AddField("Skin", $"[View Image]({player.SkinUrl})", inline: true)
                 .AddField("Type", $"`{player.SkinType}`", true)
                 .AddField("Account", $"Legacy: `{player.Legacy}`\nDemo: `{player.Demo}`", inline: true)
                 .AddField("Name History", playerNamesHistoryBuilder.ToString())

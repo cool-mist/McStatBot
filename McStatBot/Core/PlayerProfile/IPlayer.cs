@@ -7,7 +7,8 @@ namespace McStatBot.Core.PlayerProfile
         bool Found { get; }
         string Name { get; }
         Guid Id { get; }
-        string Skin { get; }
+        string SkinUrl { get; }
+        string HeadUrl { get; }
         string SkinType { get; }
         bool Legacy { get; }
         bool Demo { get; }

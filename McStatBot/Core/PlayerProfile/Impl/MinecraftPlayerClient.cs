@@ -10,16 +10,17 @@ using System.Threading.Tasks;
 namespace McStatBot.Core.PlayerProfile.Impl
 {
     /// <summary>
-    /// https://wiki.vg/Mojang_API
+    /// Mojang apis - https://wiki.vg/Mojang_API
+    /// Crafatar apis - https://crafatar.com/
     /// </summary>
-    internal class MojangClient : IMojangClient
+    internal class MinecraftPlayerClient : IMinecraftPlayerClient
     {
         private readonly string profileByPlayerNameUri = @"https://api.mojang.com/profiles/minecraft";
         private readonly string profileByUuidUri = @"https://sessionserver.mojang.com/session/minecraft/profile/{0}";
         private readonly string nameHistoryByUuidUri = @"https://api.mojang.com/user/profiles/{0}/names";
         private readonly HttpClient httpClient;
 
-        public MojangClient()
+        public MinecraftPlayerClient()
         {
             this.httpClient = HttpClientFactory.Create();
         }
@@ -63,7 +64,8 @@ namespace McStatBot.Core.PlayerProfile.Impl
                         Id = Guid.Parse(playerSlimDetails.Id),
                         Legacy = playerSlimDetails.Legacy ?? false,
                         Demo = playerSlimDetails.Demo ?? false,
-                        Skin = playerTextureDetails.Texture.TextureData.Skin.Url,
+                        SkinUrl = $"https://crafatar.com/renders/body/{playerSlimDetails.Id}?overlay=true",
+                        HeadUrl = $"https://crafatar.com/avatars/{playerSlimDetails.Id}?overlay=true",
                         SkinType = playerTextureDetails.Texture.TextureData.Skin.Metadata?.Model ?? "classic",
                         Names = playerNameHistory.Select(n => new PlayerName()
                         {

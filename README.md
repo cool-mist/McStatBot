@@ -35,9 +35,8 @@ $> dotnet McStatBot.dll
 
 ## Todo
 
-- Construct player profile image instead of skin map
+- Fix logging
 - Docker image
 - Config file
 - Changelog command
 - Coordinates sharing
-- Fix logging
