@@ -77,5 +77,14 @@ namespace McStatBot {
                 return ResourceManager.GetString("PlayerNotFound", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I couldn&apos;t understand that. Use `{0}help` to see what I can do..
+        /// </summary>
+        internal static string UnknownCommand {
+            get {
+                return ResourceManager.GetString("UnknownCommand", resourceCulture);
+            }
+        }
     }
 }

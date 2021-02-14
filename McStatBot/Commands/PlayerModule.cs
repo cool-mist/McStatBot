@@ -2,7 +2,6 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using McStatBot.Core.PlayerProfile;
-using McStatBot.Core.PlayerProfile.Impl;
 using McStatBot.Utils;
 using System;
 using System.Linq;
@@ -13,7 +12,12 @@ namespace McStatBot.Commands
 {
     public class PlayerModule : BaseCommandModule
     {
-        private readonly IMojangClient mojangClient = new MojangClient();
+        private IMojangClient mojangClient;
+
+        public PlayerModule(IMojangClient mojangClient)
+        {
+            this.mojangClient = mojangClient;
+        }
 
         [Command("profile")]
         [Description("Shows the profile of a player")]

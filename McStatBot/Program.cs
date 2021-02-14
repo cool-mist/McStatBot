@@ -1,11 +1,10 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using McStatBot.Commands;
-using McStatBot.Core;
+using McStatBot.Container;
+using McStatBot.Core.Config;
 using McStatBot.Core.Guild;
-using McStatBot.Core.Guild.Impl;
-using McStatBot.Core.Impl;
-using Microsoft.Extensions.DependencyInjection;
+using McStatBot.Utils;
 using System;
 using System.Threading.Tasks;
 
@@ -15,69 +14,59 @@ namespace McStatBot
     {
         public static void Main(string[] args) => new Program().MainAsync(args).GetAwaiter().GetResult();
 
-        private IGuildsMonitor guildsMonitor;
-        private IGuildCollection guildsCollection;
-        private IBotStore botStore;
-        private IServiceProvider services;
-
         private async Task MainAsync(string[] args)
         {
-            var token = Environment.GetEnvironmentVariable("TOKEN");
+            IServiceProvider serviceProvider = BotContainerFactory.Build().Initialize();
+            DiscordClient bot = CreateBot(serviceProvider);
+
+            ScheduleGuildMonitor(serviceProvider);
+
+            await bot.ConnectAsync();
+            await Task.Delay(-1);
+        }
+
+        private DiscordClient CreateBot(IServiceProvider serviceProvider)
+        {
+            string token = ReadToken(serviceProvider);
+
+            DiscordClient bot = new DiscordClient(new DiscordConfiguration()
+            {
+                Token = token,
+                TokenType = TokenType.Bot,
+            });
+
+            var commands = bot.UseCommandsNext(new CommandsNextConfiguration()
+            {
+                StringPrefixes = new[] { "!" }, //TODO: Config
+                Services = serviceProvider
+            });
+
+            commands.RegisterCommands<MinecraftServerModule>();
+            commands.RegisterCommands<PlayerModule>();
+            commands.RegisterCommands<CoordinatesModule>();
+
+            commands.CommandErrored += (s, e) => e.Context.RespondAsync(string.Format(ErrorCodes.UnknownCommand, e.Context.Prefix));
+            bot.MessageCreated += (sender, e) => serviceProvider.Resolve<IGuildCollection>().Trace(e.Guild.Name);
+
+            return bot;
+        }
+
+        private string ReadToken(IServiceProvider serviceProvider)
+        {
+            var token = serviceProvider.Resolve<IConfig>().Get("TOKEN"); //TODO: Config
             if (string.IsNullOrWhiteSpace(token))
             {
                 Console.WriteLine("Missing token");
                 Environment.Exit(-1);
             }
 
-            SetupBotEnvironment();
-            ScheduleGuildMonitor();
-
-            var bot = CreateBot(token);
-
-            ConfigureBot(bot, services);
-
-            await bot.ConnectAsync();
-            await Task.Delay(-1);
+            return token;
         }
 
-        private void ConfigureBot(DiscordClient bot, IServiceProvider services)
+        private void ScheduleGuildMonitor(IServiceProvider serviceProvider)
         {
-            bot.MessageCreated += TraceGuild;
+            IGuildsMonitor guildsMonitor = serviceProvider.Resolve<IGuildsMonitor>();
 
-            var commands = bot.UseCommandsNext(new CommandsNextConfiguration()
-            {
-                StringPrefixes = new[] { "!" },
-                Services = services
-            });
-
-            commands.RegisterCommands<MinecraftServerModule>();
-            commands.RegisterCommands<PlayerModule>();
-            commands.RegisterCommands<CoordinatesModule>();
-        }
-
-        private DiscordClient CreateBot(string token)
-        {
-            return new DiscordClient(new DiscordConfiguration()
-            {
-                Token = token,
-                TokenType = TokenType.Bot,
-            });
-        }
-
-        private void SetupBotEnvironment()
-        {
-            botStore = new BotStore();
-            guildsMonitor = new GuildsMonitor(botStore);
-            guildsCollection = guildsMonitor.Load();
-
-            services = new ServiceCollection()
-                .AddSingleton(botStore)
-                .AddSingleton(guildsCollection)
-                .BuildServiceProvider();
-        }
-
-        private void ScheduleGuildMonitor()
-        {
             Task.Run(async () =>
             {
                 while (true)
@@ -86,13 +75,6 @@ namespace McStatBot
                     await Task.Delay(TimeSpan.FromSeconds(10));
                 }
             });
-        }
-
-        private Task TraceGuild(DiscordClient sender, DSharpPlus.EventArgs.MessageCreateEventArgs e)
-        {
-            guildsCollection.Trace(e.Guild.Name);
-
-            return Task.CompletedTask;
         }
     }
 }

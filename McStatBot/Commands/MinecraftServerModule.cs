@@ -1,18 +1,23 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using McStatBot.Core.Guild;
 using McStatBot.Core.ServerStatus;
-using McStatBot.Core.ServerStatus.Impl;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace McStatBot.Commands
 {
     public class MinecraftServerModule : BaseCommandModule
     {
-        private readonly Dictionary<string, string> serverNames = new Dictionary<string, string>();
-        private readonly IMinecraftServerClient minecraftServerStatsClient = new McSrvrStatClient();
+        private readonly IGuildCollection guilds;
+        private readonly IMinecraftServerClient minecraftServerStatsClient;
+
+        public MinecraftServerModule(IGuildCollection guilds, IMinecraftServerClient minecraftServerClient)
+        {
+            this.guilds = guilds;
+            this.minecraftServerStatsClient = minecraftServerClient;
+        }
 
         [Command("status")]
         [Description("Shows the status of a minecraft server")]
@@ -25,15 +30,8 @@ namespace McStatBot.Commands
         [Description("Registers and shows the status of a minecraft server name to view statuses for")]
         public async Task RegisterCommand(CommandContext ctx, [Description("Name or IP of the server")] string serverName)
         {
-
-            if (this.serverNames.ContainsKey(ctx.Guild.Name))
-            {
-                this.serverNames[ctx.Guild.Name] = serverName;
-            }
-            else
-            {
-                this.serverNames.Add(ctx.Guild.Name, serverName);
-            }
+            IGuildDetails guild = guilds.GetGuild(ctx.Guild.Name);
+            guild.DefaultServerName = serverName;
 
             await ctx.RespondAsync($"Registered {serverName}");
             await ShowCommand(ctx);
@@ -43,7 +41,9 @@ namespace McStatBot.Commands
         [Description("Shows the status of the currently regisered minecraft server")]
         public async Task ShowCommand(CommandContext ctx)
         {
-            if (!this.serverNames.TryGetValue(ctx.Guild.Name, out var serverName))
+            string serverName = guilds.GetGuild(ctx.Guild.Name).DefaultServerName;
+
+            if (serverName == null)
             {
                 await ctx.RespondAsync("Register a server first");
                 return;

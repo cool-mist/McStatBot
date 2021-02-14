@@ -7,5 +7,7 @@ namespace McStatBot.Core.Guild.Impl
         public string Name { get; set; }
 
         public DateTime LastActive { get; set; }
+
+        public string DefaultServerName { get; set; }
     }
 }

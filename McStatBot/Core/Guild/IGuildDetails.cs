@@ -6,6 +6,8 @@ namespace McStatBot.Core.Guild
     {
         string Name { get; }
 
-        DateTime LastActive { get; }
+        string DefaultServerName { get; set; } //TODO : Fix access.
+
+        DateTime LastActive { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace McStatBot.Core.Guild.Impl
 {
@@ -10,7 +11,7 @@ namespace McStatBot.Core.Guild.Impl
 
         public GuildCollection(IEnumerator<IGuildDetails> guildDetails)
         {
-            this.guildDetails = new Dictionary<string, IGuildDetails>();
+            this.guildDetails = new Dictionary<string, IGuildDetails>(StringComparer.OrdinalIgnoreCase);
 
             while (guildDetails.MoveNext())
             {
@@ -24,11 +25,22 @@ namespace McStatBot.Core.Guild.Impl
             return guildDetails.Values.GetEnumerator();
         }
 
-        public void Trace(string guildName)
+        public IGuildDetails GetGuild(string guildName)
         {
-            if (guildDetails.ContainsKey(guildName))
+            if (guildDetails.TryGetValue(guildName, out var guild))
             {
-                guildDetails.Remove(guildName);
+                return guild;
+            }
+
+            return null;
+        }
+
+        public Task Trace(string guildName)
+        {
+            if (guildDetails.TryGetValue(guildName, out var guild))
+            {
+                guild.LastActive = DateTime.Now;
+                return Task.CompletedTask;
             }
 
             this.guildDetails.Add(guildName, new GuildDetails()
@@ -36,6 +48,8 @@ namespace McStatBot.Core.Guild.Impl
                 Name = guildName,
                 LastActive = DateTime.Now
             });
+
+            return Task.CompletedTask;
         }
     }
 }

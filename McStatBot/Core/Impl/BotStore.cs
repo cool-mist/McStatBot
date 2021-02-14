@@ -1,4 +1,5 @@
 ﻿using McStatBot.Core.Guild;
+using McStatBot.Core.Impl.InternalModels;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,46 @@ namespace McStatBot.Core.Impl
             this.GuildsPath = $"{StoreRoot}/guilds.json";
 
             CreateBotStore();
+            CreateFile(GuildsPath);
+        }
+
+        public IEnumerator<IGuildDetails> ReadGuilds()
+        {
+            if (File.Exists(GuildsPath))
+            {
+                try
+                {
+                    var content = File.ReadAllText(GuildsPath);
+                    var guilds = JsonConvert.DeserializeObject<List<GuildDetailsInternal>>(content);
+
+                    if (guilds == null)
+                    {
+                        return Enumerable.Empty<IGuildDetails>().GetEnumerator();
+                    }
+
+                    return guilds.GetEnumerator();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Exception reading guilds information" + e);
+                    return Enumerable.Empty<IGuildDetails>().GetEnumerator();
+                }
+            }
+
+            return Enumerable.Empty<IGuildDetails>().GetEnumerator();
+        }
+
+        public void WriteGuilds(IEnumerator<IGuildDetails> guildDetails)
+        {
+            var guilds = new List<IGuildDetails>();
+
+            while (guildDetails.MoveNext())
+            {
+                guilds.Add(guildDetails.Current);
+            }
+
+            var content = JsonConvert.SerializeObject(guilds);
+            File.WriteAllText(GuildsPath, content);
         }
 
         private void CreateBotStore()
@@ -43,48 +84,15 @@ namespace McStatBot.Core.Impl
             Console.WriteLine($"Created {directory.FullName}");
         }
 
-        private void CreateGuildsJson()
+        private void CreateFile(string fileName)
         {
-            File.Create(GuildsPath, 100, FileOptions.SequentialScan);
-        }
-
-        public IEnumerator<IGuildDetails> ReadGuilds()
-        {
-            if (File.Exists(GuildsPath))
+            if (File.Exists(fileName))
             {
-                try
-                {
-                    var content = File.ReadAllText(GuildsPath);
-                    var guilds = JsonConvert.DeserializeObject<List<IGuildDetails>>(content);
-
-                    if (guilds == null)
-                    {
-                        return Enumerable.Empty<IGuildDetails>().GetEnumerator();
-                    }
-
-                    return guilds.GetEnumerator();
-                }
-                catch (Exception)
-                {
-                    return Enumerable.Empty<IGuildDetails>().GetEnumerator();
-                }
+                Console.WriteLine($"File {fileName} already exists");
+                return;
             }
 
-            CreateGuildsJson();
-            return Enumerable.Empty<IGuildDetails>().GetEnumerator();
-        }
-
-        public void WriteGuilds(IEnumerator<IGuildDetails> guildDetails)
-        {
-            var guilds = new List<IGuildDetails>();
-
-            while (guildDetails.MoveNext())
-            {
-                guilds.Add(guildDetails.Current);
-            }
-
-            var content = JsonConvert.SerializeObject(guilds);
-            File.WriteAllText($"{StoreRoot}/guilds.json", content);
+            File.Create(fileName, 100, FileOptions.SequentialScan).Close();
         }
     }
 }

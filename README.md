@@ -1,10 +1,8 @@
-# <img src="https://bionicbeanie.me/McStatBot.png" alt="drawing" width="30"/> McStatBot 
+# <img src="https://imgur.com/t0F5Pxp.jpg" width="30" height="40">cStatBot 
 
 Discord bot to show server status and player profile. 
 
-![.NET](https://github.com/cool-mist/McStatBot/workflows/.NET/badge.svg?branch=main) 
-
-Add bot to your discord server using this [invite](https://discord.com/api/oauth2/authorize?client_id=716535144344977469&permissions=84992&scope=bot) 
+![.NET](https://github.com/cool-mist/McStatBot/workflows/.NET/badge.svg?branch=main)
 
 ## Commands
 
@@ -34,3 +32,12 @@ $> dotnet publish -c Release
 ...
 $> dotnet McStatBot.dll
 ```
+
+## Todo
+
+- Construct player profile image instead of skin map
+- Docker image
+- Config file
+- Changelog command
+- Coordinates sharing
+- Fix logging

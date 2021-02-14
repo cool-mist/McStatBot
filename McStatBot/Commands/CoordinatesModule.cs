@@ -12,7 +12,7 @@ namespace McStatBot.Commands
         [Description("Shows all the stored coordinates")]
         public async Task ShowCommand(CommandContext ctx)
         {
-            await ctx.RespondAsync("Show command");
+            await ctx.RespondAsync("Not yet implemented!");
         }
 
         [Command("save")]
@@ -24,7 +24,7 @@ namespace McStatBot.Commands
             [Description("z coordinate")] string z,
             [Description("Name")] string name)
         {
-            await ctx.RespondAsync("Save command");
+            await ctx.RespondAsync("Not yet implemented!");
         }
     }
 }
