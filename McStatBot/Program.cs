@@ -43,9 +43,9 @@ namespace McStatBot
 
             commands.RegisterCommands<MinecraftServerModule>();
             commands.RegisterCommands<PlayerModule>();
-            commands.RegisterCommands<CoordinatesModule>();
+            //commands.RegisterCommands<CoordinatesModule>();
 
-            commands.CommandErrored += (s, e) => e.Context.RespondAsync(string.Format(ErrorCodes.UnknownCommand, e.Context.Prefix));
+            //commands.CommandErrored += (s, e) => e.Context.RespondAsync(string.Format(ErrorCodes.UnknownCommand, e.Context.Prefix));
             bot.MessageCreated += (sender, e) => serviceProvider.Resolve<IGuildCollection>().Trace(e.Guild.Name);
 
             return bot;

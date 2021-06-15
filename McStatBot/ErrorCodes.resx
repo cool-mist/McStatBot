@@ -123,6 +123,9 @@
   <data name="PlayerNotFound" xml:space="preserve">
     <value>This player {0} does not exist.</value>
   </data>
+  <data name="ServerIsNotUp" xml:space="preserve">
+    <value>The server is not up or is not accepting connections.</value>
+  </data>
   <data name="UnknownCommand" xml:space="preserve">
     <value>I couldn't understand that. Use `{0}help` to see what I can do.</value>
   </data>

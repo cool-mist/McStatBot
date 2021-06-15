@@ -79,6 +79,15 @@ namespace McStatBot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The server is not up or is not accepting connections..
+        /// </summary>
+        internal static string ServerIsNotUp {
+            get {
+                return ResourceManager.GetString("ServerIsNotUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to I couldn&apos;t understand that. Use `{0}help` to see what I can do..
         /// </summary>
         internal static string UnknownCommand {

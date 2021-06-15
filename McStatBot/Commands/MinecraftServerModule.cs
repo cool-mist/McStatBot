@@ -86,7 +86,7 @@ namespace McStatBot.Commands
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                await ctx.RespondAsync(ErrorCodes.GenericExceptionMessage);
+                await ctx.RespondAsync(ErrorCodes.ServerIsNotUp);
             }
         }
     }
