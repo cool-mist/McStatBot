@@ -6,9 +6,9 @@ using McStatBot.Core.Guild.Impl;
 using McStatBot.Core.Impl;
 using McStatBot.Core.PlayerProfile;
 using McStatBot.Core.PlayerProfile.Impl;
-using McStatBot.Core.ServerStatus;
-using McStatBot.Core.ServerStatus.Impl;
 using Microsoft.Extensions.DependencyInjection;
+using MinecraftUtils.Api;
+using MinecraftUtils.Api.Impl;
 using System;
 
 namespace McStatBot.Container
@@ -25,11 +25,17 @@ namespace McStatBot.Container
     {
         public IServiceProvider Initialize()
         {
+            IServiceProvider minecraftUtils = new ServiceCollection()
+                .AddSingletonMinecraftClient()
+                .AddSingletonTaskExecutor()
+                .BuildServiceProvider();
+
+            IMinecraftClient minecraftClient = minecraftUtils.GetService<IMinecraftClient>();
+
             IBotStore botStore = new BotStore();
             IGuildsMonitor guildsMonitor = new GuildsMonitor(botStore);
             IGuildCollection guildsCollection = guildsMonitor.Load();
             IMinecraftPlayerClient mojangClient = new MinecraftPlayerClient();
-            IMinecraftServerClient minecraftServerClient = new McSrvrStatClient();
             IConfig config = new ConfigStore();
 
             IServiceProvider serviceProvider = new ServiceCollection()
@@ -37,7 +43,7 @@ namespace McStatBot.Container
                 .AddSingleton(guildsCollection)
                 .AddSingleton(guildsMonitor)
                 .AddSingleton(mojangClient)
-                .AddSingleton(minecraftServerClient)
+                .AddSingleton(minecraftClient)
                 .AddSingleton(config)
                 .BuildServiceProvider();
 

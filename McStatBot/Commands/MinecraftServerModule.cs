@@ -2,7 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using McStatBot.Core.Guild;
-using McStatBot.Core.ServerStatus;
+using MinecraftUtils.Api;
 using System;
 using System.Threading.Tasks;
 
@@ -11,9 +11,9 @@ namespace McStatBot.Commands
     public class MinecraftServerModule : BaseCommandModule
     {
         private readonly IGuildCollection guilds;
-        private readonly IMinecraftServerClient minecraftServerStatsClient;
+        private readonly IMinecraftClient minecraftServerStatsClient;
 
-        public MinecraftServerModule(IGuildCollection guilds, IMinecraftServerClient minecraftServerClient)
+        public MinecraftServerModule(IGuildCollection guilds, IMinecraftClient minecraftServerClient)
         {
             this.guilds = guilds;
             this.minecraftServerStatsClient = minecraftServerClient;
@@ -56,7 +56,7 @@ namespace McStatBot.Commands
         {
             try
             {
-                var minecraftServer = await minecraftServerStatsClient.GetServerStatus(serverName);
+                var minecraftServer = await minecraftServerStatsClient.GetStateAsync(serverName);
 
                 if (minecraftServer == null)
                 {
@@ -64,19 +64,21 @@ namespace McStatBot.Commands
                     return;
                 }
 
-                if (!minecraftServer.Online)
+                IMinecraftState serverState = minecraftServer.Result;
+
+                if (!(serverState?.State == "Online"))
                 {
                     await ctx.RespondAsync($"{serverName} is not online");
                     return;
                 }
 
                 var discordEmbed = new DiscordEmbedBuilder()
-                    .WithAuthor($"Status for {minecraftServer.Hostname}", null, minecraftServer.Icon)
+                    .WithAuthor($"Status for {serverState.Hostname}", null, serverState.Icon)
                     .WithColor(DiscordColor.DarkRed)
-                    .WithThumbnail(minecraftServer.Icon)
-                    .AddField("Players", $"{minecraftServer.OnlinePlayers}/{minecraftServer.MaxPlayers}", inline: true)
-                    .AddField("Version", $"{minecraftServer.Version}", inline: true)
-                    .AddField("Motd", $"{string.Join('\n', minecraftServer.Motd)}")
+                    .WithThumbnail($"https://api.mcsrvstat.us/icon/{serverName}")
+                    .AddField("Players", $"{serverState.OnlinePlayers}/{serverState.MaxPlayers}", inline: true)
+                    .AddField("Version", $"{serverState.Version}", inline: true)
+                    .AddField("Motd", $"{string.Join('\n', serverState.Motd)}")
                     .Build();
 
                 await ctx.RespondAsync(null, false, discordEmbed);
